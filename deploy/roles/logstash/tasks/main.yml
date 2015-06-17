@@ -1,4 +1,16 @@
 ---
 
+- name: Add Logstash repository
+  apt_repository: repo={{ logstash.repository }} state=present
+  tags:
+    - logstash
+
 - name: Install Logstash
   apt: name=logstash update_cache=yes
+  tags:
+    - logstash
+
+- name: Start and enable Logstash
+  service: name=logstash enabled=yes state=started
+  tags:
+    - logstash

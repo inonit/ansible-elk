@@ -6,8 +6,7 @@
 - name: Install latest packages
   apt: name={{ item }} state=latest
   with_items:
-  	- bash
-  	- openssl
-  	- openjdk-7-jre
+    - openssl
+    - openjdk-7-jre
   tags:
-  	- base
+    - base

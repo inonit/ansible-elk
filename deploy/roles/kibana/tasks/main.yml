@@ -5,21 +5,13 @@
   tags:
     - kibana
 
-- name: Extract Kibana to {{ kibana.archive_dir }}
-  unarchive: src={{ kibana.archive_name }} dest={{ kibana.archive_dir }} copy=no
-  tags:
-    - kibana
-
-- name: Copy Kibana to {{ kibana.install_dir }}
-  command: '{{ item }} chdir={{ kibana.archive_dir }}'
-  with_items:
-  	- 'cp -R kibana-4*/* {{ kibana.install_dir }}'
+- name: Extract Kibana to {{ kibana.install_dir }}
+  unarchive: src={{ kibana.archive }} dest={{ kibana.install_dir }} copy=no
   tags:
     - kibana
 
 - name: Install Kibana init script
-  template: src=kibana4-init-script mode=0655
-  			dest=/etc/init.d/kibana4
+  template: src=kibana4-init-script dest=/etc/init.d/kibana4 mode=0655
   tags:
     - kibana
 
