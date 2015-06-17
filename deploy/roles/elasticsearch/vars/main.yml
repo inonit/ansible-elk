@@ -1,0 +1,6 @@
+---
+
+"elasticsearch": {
+	"public_key": "https://packages.elastic.co/GPG-KEY-elasticsearch",
+	"repository": "deb http://packages.elastic.co/elasticsearch/1.6/debian stable main"
+}

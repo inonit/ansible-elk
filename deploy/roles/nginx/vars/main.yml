@@ -1,0 +1,5 @@
+---
+
+"nginx": {
+	"server_name": "elk.local"
+}

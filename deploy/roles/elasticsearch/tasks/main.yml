@@ -1,0 +1,21 @@
+---
+
+- name: Add Elasticsearch repository public key
+  apt_key: url={{ elasticsearch.public_key }}
+  tags:
+    - elasticsearch
+
+- name: Add Elasticsearch repository
+  apt_repository: repo={{ elasticsearch.repository }} state=present
+  tags:
+    - elasticsearch
+
+- name: Install Elasticsearch
+  apt: name=elasticsearch update_cache=yes
+
+- name: Start and enable Elasticsearch
+  service: name=elasticsearch enabled=yes state=started
+  tags:
+    - elasticsearch
+
+# TODO: Install config template

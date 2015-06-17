@@ -1,0 +1,32 @@
+---
+
+- name: Download Kibana
+  get_url: url={{ kibana.download_url }} dest={{ kibana.archive }}
+  tags:
+    - kibana
+
+- name: Extract Kibana to {{ kibana.archive_dir }}
+  unarchive: src={{ kibana.archive_name }} dest={{ kibana.archive_dir }} copy=no
+  tags:
+    - kibana
+
+- name: Copy Kibana to {{ kibana.install_dir }}
+  command: '{{ item }} chdir={{ kibana.archive_dir }}'
+  with_items:
+  	- 'cp -R kibana-4*/* {{ kibana.install_dir }}'
+  tags:
+    - kibana
+
+- name: Install Kibana init script
+  template: src=kibana4-init-script mode=0655
+  			dest=/etc/init.d/kibana4
+  tags:
+    - kibana
+
+- name: Start and enable Kibana
+  service: name=kibana4 enabled=yes state=started
+  tags:
+    - kibana
+
+
+# TODO: Install config template

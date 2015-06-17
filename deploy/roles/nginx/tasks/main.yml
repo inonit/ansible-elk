@@ -1,0 +1,16 @@
+---
+
+- name: Install Nginx
+  apt: name=nginx state=installed
+  tags:
+  	- nginx
+
+- name: Create Nginx configuration
+  template: src=kibana-reverse-proxy.conf dest=/etc/nginx/sites-available/default
+  tags:
+  	- nginx
+  	- restart
+  notify:
+  	- restart nginx
+
+
