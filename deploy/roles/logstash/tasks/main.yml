@@ -1,16 +1,63 @@
 ---
 
-- name: Add Logstash repository
-  apt_repository: repo={{ logstash.repository }} state=present
+- name: Add Logstash Server repository
+  apt_repository: repo={{ logstash.server_repository }} state=present
   tags:
     - logstash
 
-- name: Install Logstash
+- name: Install Logstash Server
   apt: name=logstash update_cache=yes
   tags:
     - logstash
 
-- name: Start and enable Logstash
+- name: Create directories for SSL certificates
+  file: path={{ item }} state=directory
+  with_items:
+    - '/etc/pki/tls/certs'
+    - '/etc/pki/tls/private'
+
+- name: Create Logstash Forwarder SSL certificates
+  command: 'openssl req -subj "/CN={{ fqdn }}/" -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt'
+  tags:
+    - logstash
+
+- name: Copy 01-lumberjack-input.conf template
+  template: src=01-lumberjack-input.conf dest=/etc/logstash/conf.d
+  tags:
+    - logstash
+
+- name: Copy 10-syslog.conf template
+  template: src=10-syslog.conf dest=/etc/logstash/conf.d
+  tags:
+    - logstash
+
+- name: Copy 30-lumberjack-output.conf template
+  template: src=30-lumberjack-output.conf dest=/etc/logstash/conf.d
+  tags:
+    - logstash
+
+- name: Enable and start Logstash Server
   service: name=logstash enabled=yes state=started
   tags:
     - logstash
+
+- name: Add Logstash Forwarder repository
+  apt_repository: repo={{ logstash.forwarder_repository }} state=present
+  tags:
+    - logstash
+
+- name: Install Logstash Forwarder
+  apt: name=logstash-forwarder update_cache=yes
+  tags:
+    - logstash
+
+- name: Copy logstash-forwarder.conf template
+  template: src=logstash-forwarder.conf dest=/etc
+  tags:
+    - logstash
+
+- name: Enable and start Logstash Forwarder
+  service: name=logstash-forwarder enabled=yes state=started
+  tags:
+    - logstash
+

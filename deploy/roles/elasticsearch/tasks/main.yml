@@ -13,7 +13,7 @@
 - name: Install Elasticsearch
   apt: name=elasticsearch update_cache=yes
 
-- name: Start and enable Elasticsearch
+- name: Enable and start Elasticsearch
   service: name=elasticsearch enabled=yes state=started
   tags:
     - elasticsearch

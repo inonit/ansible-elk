@@ -15,7 +15,7 @@
   tags:
     - kibana
 
-- name: Start and enable Kibana
+- name: Enable and start Kibana
   service: name=kibana4 enabled=yes state=started
   tags:
     - kibana

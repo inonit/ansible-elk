@@ -1,5 +1,5 @@
 ---
 
 "nginx": {
-	"server_name": "elk.local"
+	"server_name": "{{ fqdn }}"
 }
