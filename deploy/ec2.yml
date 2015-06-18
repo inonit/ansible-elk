@@ -1,0 +1,52 @@
+---
+
+- name: Launch an EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    - n_instances: 1            # How many instances to launch
+    - image: ami-47a23a30       # Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+    - keypair: elk_node         # Make sure to create this first!
+    - instance_type: t1.micro
+    - region: eu-west-1
+    - security_group: elk-node
+
+  tasks:
+    - name: Launch instance
+      ec2:
+        group: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ image }}"
+        region: "{{ region }}"
+        exact_count: "{{ n_instances }}"
+        key_name: "{{ keypair }}"
+        assign_public_ip: yes
+        wait: true
+        count_tag:
+          Name: ELK Node
+        instance_tags:
+          Name: ELK Node
+      register: ec2
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=launched
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=running
+      with_items: ec2.instances
+
+
+- name: Provision instance(s)
+  hosts: ec2hosts
+  sudo: True
+  gather_facts: True
+  vars:
+    - fqdn: elk.example.com
+  roles:
+    - common
+    - elasticsearch
+    - kibana
+    - logstash
+    - nginx
