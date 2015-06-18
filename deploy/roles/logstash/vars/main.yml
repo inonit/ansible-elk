@@ -2,5 +2,6 @@
 
 "logstash": {
     "server_repository": "'deb http://packages.elasticsearch.org/logstash/1.5/debian stable main'",
-    "forwarder_repository": "'deb http://packages.elasticsearch.org/logstashforwarder/debian stable main'"
+    "forwarder_repository": "'deb http://packages.elasticsearch.org/logstashforwarder/debian stable main'",
+    "geoip_download": "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
 }

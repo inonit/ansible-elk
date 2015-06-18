@@ -1,0 +1,28 @@
+---
+
+- name: Add Logstash Forwarder repository
+  apt_repository: repo={{ logstash.forwarder_repository }} state=present
+  tags:
+    - logstash-forwarder
+
+- name: Install Logstash Forwarder
+  apt: name=logstash-forwarder update_cache=yes
+  tags:
+    - logstash-forwarder
+
+- name: Copy logstash-forwarder.conf template
+  template: src=logstash-forwarder.conf dest=/etc
+  tags:
+    - logstash-forwarder
+
+- name: Register Logstash Forwarder in init.d
+  command: update-rc.d logstash-forwarder defaults
+  tags:
+    - logstash-forwarder
+
+- name: Enable and start Logstash Forwarder
+  service: name=logstash-forwarder enabled=yes state=started
+  tags:
+    - logstash-forwarder
+
+

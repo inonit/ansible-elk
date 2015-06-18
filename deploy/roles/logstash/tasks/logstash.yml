@@ -1,0 +1,62 @@
+---
+
+- name: Add Logstash Server repository
+  apt_repository: repo={{ logstash.server_repository }} state=present
+  tags:
+    - logstash
+
+- name: Install Logstash Server
+  apt: name=logstash update_cache=yes
+  tags:
+    - logstash
+
+- name: Create directories for SSL certificates
+  file: path={{ item }} state=directory
+  with_items:
+    - '/etc/pki/tls/certs'
+    - '/etc/pki/tls/private'
+
+- name: Create Logstash Forwarder SSL certificates
+  command: 'openssl req -subj "/CN={{ fqdn }}/" -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt creates=/etc/pki/tls/private/logstash-forwarder.key'
+  tags:
+    - logstash
+
+- name: Download GeoIP Database
+  get_url: url={{ logstash.geoip_download }} dest=/etc/logstash
+  tags:
+    - logstash
+
+- name: Extract GeoIP Database
+  command: gunzip /etc/logstash/GeoLiteCity.dat.gz
+  tags:
+    - logstash
+
+- name: Create Logstash patterns directory
+  file: path=/opt/logstash/patterns state=directory owner=logstash group=logstash
+  tags:
+    - logstash
+
+- name: Copy Logstash conf.d templates
+  template: src={{ item }} dest=/etc/logstash/conf.d
+  with_items:
+    - conf.d/01-lumberjack-input.conf
+    - conf.d/10-syslog.conf
+    - conf.d/11-nginx.conf
+    - conf.d/30-lumberjack-output.conf
+  tags:
+    - logstash
+
+- name: Copy Logstash pattern templates
+  template: src={{ item }} dest=/opt/logstash owner=logstash group=logstash
+  with_items:
+    - patterns/nginx
+
+- name: Register Logstash in init.d
+  command: update-rc.d logstash defaults
+  tags:
+    - logstash
+
+- name: Enable and start Logstash Server
+  service: name=logstash enabled=yes state=started
+  tags:
+    - logstash
