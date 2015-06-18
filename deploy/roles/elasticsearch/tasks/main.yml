@@ -15,8 +15,8 @@
   tags:
     - elasticsearch
 
-- name: Create Elasticsearch PID directory
-  file: path=/var/run/elasticsearch state=directory
+- name: Replace Elasticsearch PID directory
+  lineinfile: dest=/etc/init.d/elasticsearch regexp="PID_DIR\=" line='PID_DIR="/var/run"'
   tags:
     - elasticsearch
 
