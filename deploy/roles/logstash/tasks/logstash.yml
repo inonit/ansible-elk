@@ -47,7 +47,7 @@
     - logstash
 
 - name: Copy Logstash pattern templates
-  template: src={{ item }} dest=/opt/logstash owner=logstash group=logstash
+  template: src={{ item }} dest=/opt/logstash/patterns owner=logstash group=logstash
   with_items:
     - patterns/nginx
 
