@@ -27,7 +27,7 @@
     - logstash
 
 - name: Extract GeoIP Database
-  command: gunzip /etc/logstash/GeoLiteCity.dat.gz
+  command: gunzip /etc/logstash/GeoLiteCity.dat.gz creates=/etc/logstash/GeoLiteCity.dat
   tags:
     - logstash
 
