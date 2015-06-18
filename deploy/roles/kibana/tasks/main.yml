@@ -15,6 +15,11 @@
   tags:
     - kibana
 
+- name: Register Kibana in init.d
+  command: update-rc.d kibana4 defaults 96 9
+  tags:
+    - kibana
+
 - name: Enable and start Kibana
   service: name=kibana4 enabled=yes state=started
   tags:

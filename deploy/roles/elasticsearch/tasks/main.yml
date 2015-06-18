@@ -12,6 +12,13 @@
 
 - name: Install Elasticsearch
   apt: name=elasticsearch update_cache=yes
+  tags:
+    - elasticsearch
+
+- name: Register Elasticsearch in init.d
+  command: update-rc.d elasticsearch defaults 95 10
+  tags:
+      - elasticsearch
 
 - name: Enable and start Elasticsearch
   service: name=elasticsearch enabled=yes state=started

@@ -5,12 +5,10 @@
   sudo: yes
   sudo_user: root
   remote_user: vagrant
-
   vars:
     - fqdn: elk.local
     - project_name: ELK
     - remote_user: vagrant
-
   roles:
     - common
     - elasticsearch
