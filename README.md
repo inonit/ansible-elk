@@ -4,7 +4,7 @@
 Contains ansible scripts for settings ut ELK on Vagrant and AWS EC2.
 Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-4-on-ubuntu-14-04)
 
-## Vagran Provisioning
+## Vagrant Provisioning
 
 ### Requirements
 
@@ -28,3 +28,5 @@ Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.c
 
 Make sure you have your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment
 variables is set.
+
+TODO: Write ec2.yml. This is not ready yet.

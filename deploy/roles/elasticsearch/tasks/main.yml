@@ -15,8 +15,13 @@
   tags:
     - elasticsearch
 
+- name: Create Elasticsearch PID directory
+  file: path=/var/run/elasticsearch state=directory
+  tags:
+    - elasticsearch
+
 - name: Register Elasticsearch in init.d
-  command: update-rc.d elasticsearch defaults 95 10
+  command: update-rc.d elasticsearch defaults
   tags:
       - elasticsearch
 

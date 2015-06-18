@@ -11,12 +11,12 @@
     - kibana
 
 - name: Install Kibana init script
-  template: src=kibana4-init-script dest=/etc/init.d/kibana4 mode=0655
+  template: src=kibana4-init-script dest=/etc/init.d/kibana4 mode=0755
   tags:
     - kibana
 
 - name: Register Kibana in init.d
-  command: update-rc.d kibana4 defaults 96 9
+  command: update-rc.d kibana4 defaults
   tags:
     - kibana
 
