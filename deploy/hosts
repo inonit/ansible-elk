@@ -2,4 +2,3 @@
 localhost
 
 [ec2hosts]
-ec2-52-16-225-83.eu-west-1.compute.amazonaws.com ansible_ssh_private_key_file=~/.ssh/elk-node.pem
