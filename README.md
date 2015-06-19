@@ -57,7 +57,8 @@ Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.c
 Once done, check your `hosts` file for the public DNS address for your newly created server.
 Point your web browser at this address, and you should be good to go.
 
-    
+## Security
+
 **The default setup is wide open, so you'll have to secure your server with .htaccess or other means!**
 
 
