@@ -26,7 +26,26 @@ Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.c
 
 ### Configure
 
-Make sure you have your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment
-variables is set.
+1. Make sure you have your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables is set.
 
-TODO: Write ec2.yml. This is not ready yet.
+    export AWS_ACCESS_KEY_ID=MyAccessKeyID
+    export AWS_SECRET_ACCESS_KEY=MySuperSecretAccessKey
+
+2. Disable host key checking: 
+
+    $ export ANSIBLE_HOST_KEY_CHECKING=False
+
+3. Log into the AWS Console and create a new Key pair called `elk-node`. Download the PEM certificate and 
+   place it in your ~/.ssh directory. Remember to `chmod 400 elk-node.pem`.
+
+4. Run the playbook.
+    
+    $ ansible-playbook -i hosts --tags "setup" ec2.yml
+    ....
+    working...
+    ...
+    $ ansible-playbook -i hosts --tags "provision" ec2.yml
+    
+
+
+

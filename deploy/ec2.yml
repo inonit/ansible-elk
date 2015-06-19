@@ -1,49 +1,61 @@
 ---
 
-- name: Launch an EC2 instance
+- name: Launch EC2 instance
   hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: false
+  tags: setup
   vars:
-    - n_instances: 1            # How many instances to launch
-    - image: ami-47a23a30       # Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
-    - keypair: elk_node         # Make sure to create this first!
-    - instance_type: t1.micro
-    - region: eu-west-1
-    - security_group: elk-node
-
+    keypair: elk-node         # Make sure to create this first!
+    instance_type: t2.micro
+    region: eu-west-1
+    security_group: default
   tasks:
     - name: Launch instance
       ec2:
-        group: "{{ security_group }}"
         instance_type: "{{ instance_type }}"
-        image: "{{ image }}"
         region: "{{ region }}"
-        exact_count: "{{ n_instances }}"
         key_name: "{{ keypair }}"
-        assign_public_ip: yes
+        group: "{{ security_group }}"
+        image: ami-47a23a30
+        exact_count: 1
         wait: true
         count_tag:
-          Name: ELK Node
+          Name: ELK Server
         instance_tags:
-          Name: ELK Node
+          Name: ELK Server
       register: ec2
 
-    - name: Add all instance public IPs to host group
-      add_host: hostname={{ item.public_ip }} groups=launched
+    # This would be ideal, but it does not work.
+    # - name: Add all instance public DNS to host group
+    #   add_host: name={{ item.public_dns_name }} groups=ec2hosts
+    #   with_items: ec2.instances
+
+    # Because the above does not work, we need to use this workaround.
+    # This requires us to run the playbook twice, because the host is not
+    # in the hosts file on the first run.
+    - name: Add instance to local host group
+      lineinfile: dest=hosts regexp="{{ item.public_dns_name }}" insertafter="[ec2hosts]" line="{{ item.public_dns_name }} ansible_ssh_private_key_file=~/.ssh/{{ keypair }}.pem"
+      with_items: ec2.instances
+
+    - name: Register public DNS fact
+      set_fact: public_dns="{{ item.public_dns_name }}"
       with_items: ec2.instances
 
     - name: Wait for SSH to come up
-      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=running
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
       with_items: ec2.instances
 
 
-- name: Provision instance(s)
+- name: Provision instance
   hosts: ec2hosts
-  sudo: True
-  gather_facts: True
+  sudo: true
+  remote_user: "{{ remote_user }}"
+  gather_facts: true
+  tags: provision
   vars:
-    - fqdn: elk.example.com
+    remote_user: ubuntu
+    fqdn: "{{ inventory_hostname }}"
   roles:
     - common
     - elasticsearch
