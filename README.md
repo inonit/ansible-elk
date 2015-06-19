@@ -1,5 +1,5 @@
 
-# Ansible deployment for ELK (Elasticsearch, Logstash, Kibana) on a Vagrant box.
+# Ansible deployment for ELK (Elasticsearch, Logstash, Kibana) on Vagrant and EC2
 
 Contains ansible scripts for settings ut ELK on Vagrant and AWS EC2.
 Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-4-on-ubuntu-14-04).
