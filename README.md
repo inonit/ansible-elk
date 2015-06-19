@@ -29,8 +29,8 @@ Based on Mitchell Ancias' article from [DigitalOcean](https://www.digitalocean.c
 1. Make sure you have your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables is set.
 
     ```
-    export AWS_ACCESS_KEY_ID=MyAccessKeyID
-    export AWS_SECRET_ACCESS_KEY=MySuperSecretAccessKey
+    $ export AWS_ACCESS_KEY_ID=MyAccessKeyID
+    $ export AWS_SECRET_ACCESS_KEY=MySuperSecretAccessKey
     ```
 
 2. Disable host key checking: 
